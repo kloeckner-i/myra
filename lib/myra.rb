@@ -1,4 +1,4 @@
-require "myra/version"
+require 'myra/version'
 
 module Myra
   # Your code goes here...
