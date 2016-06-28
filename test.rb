@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'openssl'
 require 'base64'
 require 'pry'
@@ -5,7 +6,7 @@ require 'faraday'
 
 API_KEY = ENV['MYRACLOUD_API_KEY'].freeze
 API_SECRET = ENV['MYRACLOUD_API_SECRET'].freeze
-API_URL = 'https://api.myracloud.com'.freeze
+API_URL = 'https://api.myracloud.com'
 $date = DateTime.now.to_s
 
 def uri
@@ -38,5 +39,3 @@ response = conn.get(uri) do |req|
   req.headers['Content-Type'] = 'application/json'
   req.headers['Date'] = $date
 end
-
-binding.pry
