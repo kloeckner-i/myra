@@ -5,15 +5,14 @@ cache:
 stages:
   - lint
   - test
-  - publish_gem
-  - publish_docker
 
 rubocop:
   stage: lint
   before_script:
     - gem install rubocop
   script:
-    - rubocop
+    - rubocop -v
+    - rubocop -c .rubocop.yml
 
 rspec:
   stage: test
