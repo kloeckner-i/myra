@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.3
   Exclude:
     - '*.gemspec'
     - 'Gemfile*'
@@ -11,14 +11,6 @@ AllCops:
 # Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.
 Lint/UnusedMethodArgument:
   Exclude:
-
-# Offense count: 33
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes.
-# URISchemes: http, https
-Metrics/LineLength:
-  Max: 120
-  Exclude:
-    - 'spec/lib/shia/service_spec.rb'
 
 # Offense count: 6
 # Configuration parameters: CountComments.
