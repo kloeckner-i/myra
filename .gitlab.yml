@@ -1,0 +1,26 @@
+cache:
+  paths:
+  - .bundler/
+
+stages:
+  - lint
+  - test
+  - publish_gem
+  - publish_docker
+
+rubocop:
+  stage: lint
+  before_script:
+    - gem install rubocop
+  script:
+    - rubocop
+
+rspec:
+  stage: test
+  before_script:
+    - ruby -v
+    - which ruby
+    - gem install bundler --no-ri --no-rdoc
+    - bundle install --jobs $(nproc)  "${FLAGS[@]}" --path=.bundler
+  script:
+    - bundle exec rspec
