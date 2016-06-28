@@ -11,6 +11,7 @@ rubocop:
   before_script:
     - gem install rubocop
   script:
+    - ruby -v
     - rubocop -v
     - rubocop -c .rubocop.yml
 
