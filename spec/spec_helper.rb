@@ -3,6 +3,7 @@ require 'simplecov'
 
 SimpleCov.start do
   add_filter 'test.rb'
+  add_filter '.bundler/'
 end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
