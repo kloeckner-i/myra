@@ -20,4 +20,10 @@ module Myra
 
   class CallError < StandardError
   end
+
+  class DeserializationError < StandardError
+    def message
+      'Could not parse hash into ValueObject!'
+    end
+  end
 end

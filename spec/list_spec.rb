@@ -68,6 +68,7 @@ describe Myra::List do
         domains = action.perform
         expect(domains).to be_an Array
         domains.each { |domain| expect(domain).to be_a Myra::Domain }
+        expect(domains.last.name).to eql 'nova.at'
       end
 
       it 'throws an error if the response contains an error' do

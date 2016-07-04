@@ -9,6 +9,10 @@ module Myra
     attr_accessor :modified, :created, :name, :auto_update, :maintenance,
                   :paused, :owned, :dns_records, :reversed
 
+    %w(auto_update maintenance owned paused reversed).each do |boolean|
+      alias_method "#{boolean}?", boolean
+    end
+
     def initialize(id:)
       @id = id
     end
@@ -19,7 +23,8 @@ module Myra
       domain = new(id: hash['id'])
       domain.modified = DateTime.parse(hash['modified'])
       domain.created = DateTime.parse(hash['created'])
-      domain.dns_records = hash['dns_records']
+      domain.dns_records = hash['dnsRecords']
+      domain.auto_update = hash['autoUpdate']
       %w(modified created).each do |date_field|
         domain.send "#{date_field}=", DateTime.parse(hash[date_field])
       end
