@@ -24,3 +24,6 @@ rspec:
     - bundle install --jobs $(nproc)  "${FLAGS[@]}" --path=.bundler
   script:
     - bundle exec rspec
+  artifacts:
+    paths:
+      - coverage/

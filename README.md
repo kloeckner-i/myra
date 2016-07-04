@@ -69,7 +69,7 @@ TODO
 
 ## Supported version for the MyraCloud API
 
-The currently supported version for the PI is *1.4*.
+The currently supported version for the API is *1.4*.
 
 ## Development
 
