@@ -2,22 +2,45 @@
 require 'spec_helper'
 
 describe Myra::Request do
+  class InvalidValueObject; end
+  class ValidValueObject
+    PATH = '/fooo'
+  end
+
   let(:request_class) { described_class }
   it 'is only viable for a valid value object class' do
-    class Bar
-    end
-
     expect do
-      request_class.new(Bar)
+      request_class.new(InvalidValueObject)
     end.to raise_error(Myra::ValueObjectUndefinedError)
   end
 
-  describe 'Request security features' do
-    # values taken from MyraCloud api doc
-    let(:date) { '2014-04-26CET13:04:00+0100' }
-    let(:api_secret) { '6b3a71954faf11e4b898001517fa8424' }
-    let(:expected_signing_key) do
-      '1c2a270750de0cc1b8c3522494abd9a04e0b7801be6ece02755fa7bc9f8f5467'
+  describe '#signing_string' do
+    it 'generates a signing string from the values given' do
+      request = request_class.new(ValidValueObject)
+      expected = 'd41d8cd98f00b204e9800998ecf8427e' \
+                 '#GET' \
+                 '#/en/rapi/fooo' \
+                 '#application/json' \
+                 "##{request.date}"
+      expect(request.signing_string).to eql expected
+    end
+  end
+
+  describe '#type' do
+    let(:request) { request_class.new(ValidValueObject) }
+    it 'is a GET request by default' do
+      expect(request.type).to eql :get
+    end
+
+    it 'is able to be set to other types' do
+      request.type = :options
+      expect(request.type).to eql :options
+    end
+
+    it 'cannot be set to bogus types' do
+      expect do
+        request.type = :bogus_method
+      end.to raise_error(Myra::InvalidRequestTypeError)
     end
   end
 end

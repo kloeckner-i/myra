@@ -8,7 +8,17 @@ module Myra
 
     def perform
       # perform request for value object
-      []
+      hash = evaluate Request.new(value_object_class).do
+      hash['list']
+    end
+
+    private
+
+    def evaluate(response)
+      raise Myra::CallError unless response.status == 200
+      hash = Oj.load(response.body)
+      raise Myra::ErrorResponse if hash['error']
+      hash
     end
   end
 end
