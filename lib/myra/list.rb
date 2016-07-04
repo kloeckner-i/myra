@@ -9,7 +9,7 @@ module Myra
     def perform
       # perform request for value object
       hash = evaluate Request.new(value_object_class).do
-      hash['list']
+      hash['list'].map { |item| value_object_class.from_hash(item) }
     end
 
     private

@@ -61,14 +61,20 @@ describe Myra::List do
       JSON
     end
 
-    before do
-      stub_request(:get, 'https://api.myracloud.com/en/rapi/domains')
-        .to_return response
-    end
+    describe '#perform' do
+      it 'retrieves domains as list of objects' do
+        stub_request(:get, 'https://api.myracloud.com/en/rapi/domains')
+          .to_return response
+        domains = action.perform
+        expect(domains).to be_an Array
+        domains.each { |domain| expect(domain).to be_a Myra::Domain }
+      end
 
-    it 'retrieves domains as list of objects' do
-      domains = action.perform
-      expect(domains).to be_an Array
+      it 'throws an error if the response contains an error' do
+        stub_request(:get, 'https://api.myracloud.com/en/rapi/domains')
+          .to_return response.merge(body: '{"error":true}')
+        expect { action.perform }.to raise_error(Myra::ErrorResponse)
+      end
     end
   end
 end
