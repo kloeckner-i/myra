@@ -4,7 +4,8 @@ require 'myra/configuration'
 require 'myra/request'
 
 # actions which can be performed
-require 'myra/list'
+require 'myra/actions/domains'
+require 'myra/actions/dns_records'
 
 # objects which can be retrieved
 require 'myra/objects/domain'
