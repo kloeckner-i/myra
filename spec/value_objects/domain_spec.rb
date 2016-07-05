@@ -14,7 +14,6 @@ describe Myra::Domain do
         'maintenance' => false,
         'paused' => false,
         'owned' => false,
-        'dnsRecords' => [],
         'reversed' => false
       }
     end
@@ -29,7 +28,6 @@ describe Myra::Domain do
       expect(domain.paused?).to be_falsey
       expect(domain.reversed?).to be_falsey
       expect(domain.owned?).to be_falsey
-      expect(domain.dns_records).to be_empty
     end
   end
 end
