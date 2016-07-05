@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Myra::Request do
   describe '#signing_string' do
     it 'generates a signing string from the values given' do
-      request = described_class.new(uri: '/en/rapi/fooo')
+      request = described_class.new(path: '/fooo')
       expected = 'd41d8cd98f00b204e9800998ecf8427e' \
                  '#GET' \
                  '#/en/rapi/fooo' \
@@ -15,7 +15,7 @@ describe Myra::Request do
   end
 
   describe '#type' do
-    let(:request) { described_class.new(uri: '/foo') }
+    let(:request) { described_class.new(path: '/foo') }
     it 'is a GET request by default' do
       expect(request.type).to eql :get
     end

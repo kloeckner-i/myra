@@ -2,15 +2,14 @@
 require 'spec_helper'
 
 describe Myra::Request::HTTP do
-  let(:req) { Myra::Request.new(uri: path) }
+  let(:req) { Myra::Request.new(path: path) }
   let(:http) { described_class.new req }
-  let(:base_url) { 'https://api.myracloud.com' }
-  let(:path) { '/domains' }
+  let(:base_url) { 'https://api.myracloud.com/en/rapi' }
   let(:url) { "#{base_url}#{path}"}
 
   describe '#response', :focus do
     describe '#get' do
-      let(:path) { '/en/rapi/domains' }
+      let(:path) { '/domains' }
       let(:headers) do
         {
           'Authorization': /^MYRA\s.*/,

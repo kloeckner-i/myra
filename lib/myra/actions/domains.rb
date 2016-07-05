@@ -5,7 +5,7 @@ module Myra
     PATH = '/domains'
 
     def self.list
-      response = Myra::Request.new(uri: PATH).do
+      response = Myra::Request.new(path: PATH).do
       values = Oj.load(response.body)
       values['list'].map { |domain| Domain.from_hash(domain) }
     end

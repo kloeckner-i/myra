@@ -6,7 +6,7 @@ require 'date'
 
 module Myra
   class Request
-    attr_reader :date, :api_key, :api_secret, :uri
+    attr_reader :date, :api_key, :api_secret, :path
     attr_accessor :type
 
     ALLOWED_TYPES = [
@@ -18,19 +18,19 @@ module Myra
       :delete
     ].freeze
 
-    def initialize(uri:, type: :get)
+    def initialize(path:, type: :get)
       @date = DateTime.now.to_s
       @api_key = Myra.configuration.api_key
       @api_secret = Myra.configuration.api_secret
       @type = type
-      @uri = uri
+      @path = path
     end
 
     def signing_string
       [
         md5.(payload),
         verb,
-        uri,
+        "#{Myra::PATH}#{path}",
         content_type,
         date
       ].join '#'
@@ -47,6 +47,10 @@ module Myra
 
     def content_type
       'application/json'
+    end
+
+    def uri
+      "#{Myra::BASE_URL}#{Myra::PATH}#{path}"
     end
 
     private

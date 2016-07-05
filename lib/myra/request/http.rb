@@ -5,8 +5,6 @@ require 'oj'
 module Myra
   class Request
     class HTTP
-      BASE_URL = 'https://api.myracloud.com'
-
       def initialize(request)
         @request = request
         @signature = Signature.new(
@@ -30,7 +28,7 @@ module Myra
       end
 
       def conn
-        Faraday.new(url: "#{BASE_URL}#{@request.uri}")
+        Faraday.new(url: @request.uri)
       end
 
       def api_key

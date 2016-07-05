@@ -16,5 +16,6 @@ require 'myra/objects/errors'
 
 # Myra is the top level module for this gem
 module Myra
-  API_PATH = 'https://api.myracloud.com/en/rapi'
+  BASE_URL = 'https://api.myracloud.com'
+  PATH = '/en/rapi'
 end
