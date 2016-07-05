@@ -2,21 +2,9 @@
 require 'spec_helper'
 
 describe Myra::Request do
-  class InvalidValueObject; end
-  class ValidValueObject
-    PATH = '/fooo'
-  end
-
-  let(:request_class) { described_class }
-  it 'is only viable for a valid value object class' do
-    expect do
-      request_class.new(InvalidValueObject)
-    end.to raise_error(Myra::ValueObjectUndefinedError)
-  end
-
   describe '#signing_string' do
     it 'generates a signing string from the values given' do
-      request = request_class.new(ValidValueObject)
+      request = described_class.new(uri: '/en/rapi/fooo')
       expected = 'd41d8cd98f00b204e9800998ecf8427e' \
                  '#GET' \
                  '#/en/rapi/fooo' \
@@ -27,7 +15,7 @@ describe Myra::Request do
   end
 
   describe '#type' do
-    let(:request) { request_class.new(ValidValueObject) }
+    let(:request) { described_class.new(uri: '/foo') }
     it 'is a GET request by default' do
       expect(request.type).to eql :get
     end

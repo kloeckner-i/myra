@@ -1,15 +1,22 @@
+# frozen_string_literal: true
+require 'oj'
 module Myra
   module Domains
+    PATH = '/domains'
+
     def self.list
+      response = Myra::Request.new(uri: PATH).do
+      values = Oj.load(response.body)
+      values['list'].map { |domain| Domain.from_hash(domain) }
     end
 
-    def self.create(domain)
+    def self.create(_domain)
     end
 
-    def self.delete(domain)
+    def self.delete(_domain)
     end
 
-    def self.update(domain)
+    def self.update(_domain)
     end
   end
 end

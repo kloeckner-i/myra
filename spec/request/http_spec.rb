@@ -2,12 +2,10 @@
 require 'spec_helper'
 
 describe Myra::Request::HTTP do
-  class ValueObject
-    PATH = '/domains'
-  end
-  let(:req) { Myra::Request.new(ValueObject) }
+  let(:req) { Myra::Request.new(uri: path) }
   let(:http) { described_class.new req }
   let(:base_url) { 'https://api.myracloud.com' }
+  let(:path) { '/domains' }
   let(:url) { "#{base_url}#{path}"}
 
   describe '#response', :focus do
@@ -27,9 +25,10 @@ describe Myra::Request::HTTP do
         }
       end
       it 'makes a get request against the endpoint' do
-        stub_request(:get, url)
+        req = stub_request(:get, url)
           .to_return(response)
         expect(http.response).to be_a Faraday::Response
+        expect(req).to have_been_made.once
       end
     end
   end

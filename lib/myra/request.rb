@@ -6,7 +6,7 @@ require 'date'
 
 module Myra
   class Request
-    attr_reader :date, :api_key, :api_secret
+    attr_reader :date, :api_key, :api_secret, :uri
     attr_accessor :type
 
     ALLOWED_TYPES = [
@@ -18,16 +18,12 @@ module Myra
       :delete
     ].freeze
 
-    def initialize(value_object_class)
+    def initialize(uri:, type: :get)
       @date = DateTime.now.to_s
       @api_key = Myra.configuration.api_key
       @api_secret = Myra.configuration.api_secret
-      @type = :get
-      unless value_object_class.const_defined?('PATH')
-        raise ValueObjectUndefinedError
-      end
-
-      @klass = value_object_class
+      @type = type
+      @uri = uri
     end
 
     def signing_string
@@ -47,10 +43,6 @@ module Myra
 
     def do
       HTTP.new(self).response
-    end
-
-    def uri
-      "/en/rapi#{@klass::PATH}"
     end
 
     def content_type
