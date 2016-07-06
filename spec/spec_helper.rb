@@ -9,6 +9,11 @@ end
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'myra'
 require 'webmock/rspec'
+require 'json_helper'
+
+RSpec.configure do |c|
+  c.include JSONHelper
+end
 
 # try loading pry, but do not fret if it's not there
 
