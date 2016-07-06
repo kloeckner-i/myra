@@ -15,7 +15,7 @@ module Myra
       request.payload = Oj.dump(domain.to_hash)
       response = request.do
       value = Oj.load(response.body)
-      Domain.from_hash(value['targetObject'])
+      Domain.from_hash(value['targetObject'].first)
     end
 
     def self.delete(_domain)

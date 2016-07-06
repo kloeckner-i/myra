@@ -37,7 +37,7 @@ module Myra
         domain.send "#{date_field}=", DateTime.parse(hash[date_field])
       end
       MAP.each do |k, v|
-        domain.send "#{v}=", hash[k]
+        domain.send "#{v}=", hash[k] if hash.key?(k)
       end
       domain
     end

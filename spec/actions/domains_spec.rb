@@ -51,7 +51,7 @@ describe Myra::Domains do
           {
             "error": false,
             "violationList": [],
-            "targetObject": {
+            "targetObject": [{
               "id": 1,
               "modified": "2013-12-13T11:30:00+0100",
               "created": "2013-12-13T11:30:00+0100",
@@ -59,7 +59,7 @@ describe Myra::Domains do
               "autoUpdate": false,
               "owned": true,
               "maintenance": false
-            }
+            }]
           }
         ).strip
       }
