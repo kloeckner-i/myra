@@ -1,8 +1,6 @@
 # Myra
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/myra`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This gem allows for interaction with [MyraClouds](https://myracloud.com) API.
 
 ## Installation
 
@@ -41,31 +39,47 @@ Myra.configure do |config|
   config.api_secret = 'your-secret-here'
 end
 ```
+### Domains
 
-The gem takes the concept of value object into account. All of the available resources are value objects which you can work with. By default, the aPI supports these actions:
-
-- List
-- Create
-- Update
-- Delete
-
-### List
-
-`List` is represented by the `List` object. to list all `Domain`s, you can use:
+#### List
 
 ```ruby
-include Myra
-list = List.new(Domain)
-domains = list.perform
+list = Myra::Domains.list
 # => [Domain, Domain, Domain, ...]
 
 domain[0].name
 # => 'my-awesome-name.com'
 ```
+#### Create
 
-### Rest of the CUD
+```ruby
+domain = Myra::Domain.new
+domain.name = "www.kloeckner-i.com"
+puts domain.id
+# => nil
+# [...]
+domain = Myra::Domains.create(domain)
+puts domain.id
+```
 
-TODO
+#### Update
+
+```ruby
+list = Myra::Domains.list
+# => [Domain, Domain, Domain, ...]
+
+domain_to_update = domains.first
+domain_to_update.name = "foobar.com"
+Myra::Domains.update(domain_to_update)
+```
+
+#### Delete
+
+```ruby
+# if you don't know the id, just fetch them first
+domain = Myra::Domain.new(id: 1234)
+Myra::Domains.delete domain
+```
 
 ## Supported version for the MyraCloud API
 
