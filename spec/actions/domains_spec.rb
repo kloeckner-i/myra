@@ -32,14 +32,15 @@ describe Myra::Domains do
           'Date' => /.*/,
           'Authorization' => /MYRA\s.*/
         },
-        body: %(
-          {
-            "name": "example.com',
-            "deleted": false,
-            "autoUpdate": false,
-            "autoDns": false
-          }
-        )
+        body: {
+          'name' => 'example.com',
+          'autoUpdate' => false,
+          'autoDns' => false,
+          'maintenance' => false,
+          'owned' => false,
+          'paused' => false,
+          'reversed' => false
+        }
       ).to_return response
     end
 
@@ -60,7 +61,7 @@ describe Myra::Domains do
               "maintenance": false
             }
           }
-        )
+        ).strip
       }
     end
 

@@ -5,12 +5,17 @@ module Myra
     PATH = '/domains'
 
     def self.list
-      response = Myra::Request.new(path: PATH).do
+      response = Request.new(path: PATH).do
       values = Oj.load(response.body)
       values['list'].map { |domain| Domain.from_hash(domain) }
     end
 
-    def self.create(_domain)
+    def self.create(domain)
+      request = Request.new(path: PATH, type: :put)
+      request.payload = Oj.dump(domain.to_hash)
+      response = request.do
+      value = Oj.load(response.body)
+      Domain.from_hash(value['targetObject'])
     end
 
     def self.delete(_domain)

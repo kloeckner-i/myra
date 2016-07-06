@@ -26,6 +26,9 @@ module Myra
 
     def initialize(id: nil)
       @id = id
+      %w(maintenance auto_update auto_dns paused owned reversed).each do |field|
+        send("#{field}=", false)
+      end
     end
 
     def self.from_hash(hash)
@@ -37,6 +40,25 @@ module Myra
         domain.send "#{v}=", hash[k]
       end
       domain
+    end
+
+    def to_hash
+      return new_domain_hash if id.nil?
+      domain_hash
+    end
+
+    private
+
+    def new_domain_hash
+      Hash[MAP.map { |k, v| [k, send(v)] }]
+    end
+
+    def domain_hash
+      hash = new_domain_hash
+      hash['id'] = id
+      hash['modified'] = modified.to_s
+      hash['created'] = created.to_s
+      hash
     end
   end
 end

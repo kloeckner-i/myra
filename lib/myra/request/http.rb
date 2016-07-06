@@ -24,6 +24,7 @@ module Myra
           req.headers['Content-Type'] = @request.content_type
           req.headers['Date'] = @request.date
           req.headers['Authorization'] = auth_header
+          req.body = @request.payload if [:post, :put].include?(@request.type)
         end
       end
 
