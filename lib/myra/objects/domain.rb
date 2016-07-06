@@ -7,26 +7,34 @@ module Myra
 
     attr_reader :id
     attr_accessor :modified, :created, :name, :auto_update, :maintenance,
-                  :paused, :owned, :reversed
+                  :paused, :owned, :reversed, :auto_dns, :paused_until
 
-    %w(auto_update maintenance owned paused reversed).each do |boolean|
+    %w(auto_update maintenance owned paused reversed auto_dns).each do |boolean|
       alias_method "#{boolean}?", boolean
     end
 
-    def initialize(id:)
+    MAP = {
+      # response field => target field
+      'name' => 'name',
+      'autoUpdate' => 'auto_update',
+      'maintenance' => 'maintenance',
+      'owned' => 'owned',
+      'reversed' => 'reversed',
+      'paused' => 'paused',
+      'autoDns' => 'auto_dns'
+    }.freeze
+
+    def initialize(id: nil)
       @id = id
     end
 
     def self.from_hash(hash)
       domain = new(id: hash['id'])
-      domain.modified = DateTime.parse(hash['modified'])
-      domain.created = DateTime.parse(hash['created'])
-      domain.auto_update = hash['autoUpdate']
       %w(modified created).each do |date_field|
         domain.send "#{date_field}=", DateTime.parse(hash[date_field])
       end
-      %w(name paused owned reversed maintenance).each do |field|
-        domain.send "#{field}=", hash[field]
+      MAP.each do |k, v|
+        domain.send "#{v}=", hash[k]
       end
       domain
     end
