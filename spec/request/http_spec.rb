@@ -2,8 +2,8 @@
 require 'spec_helper'
 
 describe Myra::Request::HTTP do
-  let(:req) { Myra::Request.new(path: path) }
-  let(:http) { described_class.new req }
+  let(:request) { Myra::Request.new path: path }
+  let(:http) { described_class.new request }
   let(:base_url) { 'https://api.myracloud.com/en/rapi' }
   let(:url) { "#{base_url}#{path}"}
 
@@ -24,10 +24,9 @@ describe Myra::Request::HTTP do
         }
       end
       it 'makes a get request against the endpoint' do
-        req = stub_request(:get, url)
-          .to_return(response)
+        stub_request = stub_request(:get, url).with(headers: headers).to_return(response)
         expect(http.response).to be_a Faraday::Response
-        expect(req).to have_been_made.once
+        expect(stub_request).to have_been_made.once
       end
     end
   end

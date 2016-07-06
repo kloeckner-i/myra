@@ -5,7 +5,6 @@ describe Myra::Domain do
   describe '#from_hash' do
     let(:hash) do
       {
-        'objectType' => 'DomainVO',
         'id' => 16_409,
         'modified' => '2016-02-22T10:44:30+0100',
         'created' => '2016-02-22T10:44:30+0100',
@@ -28,6 +27,9 @@ describe Myra::Domain do
       expect(domain.paused?).to be_falsey
       expect(domain.reversed?).to be_falsey
       expect(domain.owned?).to be_falsey
+
+      expect(domain.modified.strftime('%Y-%m-%d')).to eql '2016-02-22'
+      expect(domain.created.strftime('%H:%M:%S')).to eql '10:44:30'
     end
   end
 end

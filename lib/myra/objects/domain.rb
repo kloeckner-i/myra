@@ -17,9 +17,7 @@ module Myra
       @id = id
     end
 
-    # rubocop:disable Metrics/AbcSize
     def self.from_hash(hash)
-      raise Myra::DeserializationError if hash['objectType'] != OBJECT_TYPE
       domain = new(id: hash['id'])
       domain.modified = DateTime.parse(hash['modified'])
       domain.created = DateTime.parse(hash['created'])

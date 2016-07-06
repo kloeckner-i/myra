@@ -60,10 +60,10 @@ describe Myra::Domains do
     end
 
     it 'retrieves domains as list of objects' do
-      domains = subject.list
+      domains = described_class.list
       expect(stub).to have_been_made.once
       expect(domains).to be_an Array
-      domains.each { |domain| expect(domain).to be_a Myra::Domain }
+      expect(domains).to all(be_a(Myra::Domain))
       expect(domains.last.name).to eql 'nova.at'
       expect(domains.first.name).to eql 'foobar.rocks'
     end
