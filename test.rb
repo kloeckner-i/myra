@@ -10,7 +10,7 @@ API_URL = 'https://api.myracloud.com'
 $date = DateTime.now.to_s
 
 def uri
-  '/en/rapi/domains/1'
+  '/en/rapi/domains'
 end
 
 def signing_string
@@ -39,3 +39,5 @@ response = conn.get(uri) do |req|
   req.headers['Content-Type'] = 'application/json'
   req.headers['Date'] = $date
 end
+
+p response.body
