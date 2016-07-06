@@ -18,7 +18,11 @@ module Myra
       Domain.from_hash(value['targetObject'].first)
     end
 
-    def self.delete(_domain)
+    def self.delete(domain)
+      request = Request.new(path: PATH, type: :delete)
+      payload = domain.to_hash.select { |k, _| %w(id modified).include?(k) }
+      request.payload = payload
+      request.do
     end
 
     def self.update(_domain)

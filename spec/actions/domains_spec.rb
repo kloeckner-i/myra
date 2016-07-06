@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Myra::Domains do
   let(:url) { 'https://api.myracloud.com/en/rapi/domains' }
-  describe '#list' do
+  describe '.list' do
     let(:response) do
       {
         status: 200,
@@ -25,7 +25,7 @@ describe Myra::Domains do
     end
   end
 
-  describe '#create' do
+  describe '.create' do
     let!(:request) do
       stub_request(:put, url).with(
         headers: {
@@ -74,6 +74,31 @@ describe Myra::Domains do
       domain = described_class.create(domain)
       expect(request).to have_been_made.once
       expect(domain.id).to eql 1
+    end
+  end
+
+  describe '.delete' do
+    let(:modified) { DateTime.parse '2013-12-09T11:30:00+0100' }
+    let!(:request) do
+      stub_request(:put, url).with(
+        headers: {
+          'Date' => /.*/,
+          'Authorization' => /MYRA\s.*/
+        },
+        body: {
+          'id' => 1,
+          'modified' => modified
+        }
+      ).to_return(status: 200)
+    end
+
+    it 'deletes an existing domain' do
+      domain = Myra::Domain.new(id: 1)
+      domain.modified = modified
+
+      described_class.delete(domain)
+
+      expect(request).to have_been_made.once
     end
   end
 end
