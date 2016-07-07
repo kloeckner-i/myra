@@ -6,24 +6,18 @@ module Myra
     end
   end
 
+  class APIActionError < StandardError
+    attr_reader :violations
+
+    def initialize(
+      violations,
+      message = 'An error occured while processing your request'
+    )
+      super(message)
+      @violations = violations
+    end
+  end
+
   class InvalidRequestTypeError < StandardError
-    def message
-      'Request method is invalid!'
-    end
-  end
-
-  class ErrorResponse < StandardError
-    def message
-      'An error occured!'
-    end
-  end
-
-  class CallError < StandardError
-  end
-
-  class DeserializationError < StandardError
-    def message
-      'Could not parse hash into ValueObject!'
-    end
   end
 end

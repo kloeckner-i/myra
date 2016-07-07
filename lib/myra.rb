@@ -14,6 +14,9 @@ require 'myra/objects/dns_record'
 # possible errors
 require 'myra/objects/errors'
 
+# and their violations
+require 'myra/objects/violation'
+
 # Myra is the top level module for this gem
 module Myra
   BASE_URL = 'https://api.myracloud.com'

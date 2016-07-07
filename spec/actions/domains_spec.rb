@@ -4,6 +4,7 @@ require 'spec_helper'
 describe Myra::Domains do
   let(:url) { 'https://api.myracloud.com/en/rapi/domains' }
   let(:forbidden_response) { { status: 403 } }
+  let(:erroneous_response) { { status: 200, body: load_json('error') } }
   let!(:authorized_headers) do
     {
       'Date' => /.*/,
@@ -90,6 +91,28 @@ describe Myra::Domains do
         expect do
           described_class.create(domain)
         end.to raise_error(Myra::APIAuthError)
+          .with_message(
+            'Could not authenticate with the API, check your credentials'
+          )
+      end
+
+      describe 'with violations' do
+        let(:response) { erroneous_response }
+
+        it 'throws an error with the violations parsed' do
+          expect do
+            described_class.create(domain)
+          end.to raise_error(Myra::APIActionError)
+        end
+
+        it 'provides the violations as message' do
+          begin
+            described_class.create domain
+          rescue Myra::APIActionError => e
+            expect(e.violations).to be_an Array
+            expect(e.violations).to all(be_a(Myra::Violation))
+          end
+        end
       end
     end
   end
@@ -126,6 +149,25 @@ describe Myra::Domains do
         expect do
           described_class.delete(domain)
         end.to raise_error(Myra::APIAuthError)
+      end
+
+      describe 'with violations' do
+        let(:response) { erroneous_response }
+
+        it 'throws an error with the violations parsed' do
+          expect do
+            described_class.delete(domain)
+          end.to raise_error(Myra::APIActionError)
+        end
+
+        it 'provides the violations as message' do
+          begin
+            described_class.delete domain
+          rescue Myra::APIActionError => e
+            expect(e.violations).to be_an Array
+            expect(e.violations).to all(be_a(Myra::Violation))
+          end
+        end
       end
     end
   end
@@ -177,6 +219,25 @@ describe Myra::Domains do
         expect do
           described_class.update(domain)
         end.to raise_error(Myra::APIAuthError)
+      end
+
+      describe 'with violations' do
+        let(:response) { erroneous_response }
+
+        it 'throws an error with the violations parsed' do
+          expect do
+            described_class.update(domain)
+          end.to raise_error(Myra::APIActionError)
+        end
+
+        it 'provides the violations as message' do
+          begin
+            described_class.update domain
+          rescue Myra::APIActionError => e
+            expect(e.violations).to be_an Array
+            expect(e.violations).to all(be_a(Myra::Violation))
+          end
+        end
       end
     end
   end

@@ -66,38 +66,4 @@ describe Myra::Domain do
       end
     end
   end
-
-  describe '#to_hash' do
-    let(:domain) do
-      domain = described_class.new(id: 42)
-      domain.name = 'xkcd.com'
-      domain
-    end
-
-    let(:new_domain) do
-      domain = described_class.new
-      domain.name = 'smbc-comics.com'
-      domain.auto_update = true
-      domain
-    end
-
-    it 'creates a hash representation for the domain' do
-      hash = domain.to_hash
-      expect(hash).to be_a Hash
-      expect(hash['id']).to eql 42
-      expect(hash['name']).to eql 'xkcd.com'
-
-      # defaults
-      %w(maintenance autoUpdate autoDns paused owned reversed).each do |field|
-        expect(hash[field]).to be_falsey
-      end
-    end
-
-    it 'creates a hash representation of a new domain w/o certain fields' do
-      hash = new_domain.to_hash
-      %w(id modified created).each do |field|
-        expect(hash.key?(field)).to be_falsey
-      end
-    end
-  end
 end

@@ -38,9 +38,18 @@ module Myra
     def self.handle(request)
       response = request.do
       raise APIAuthError if response.status == 403
-      Oj.load(response.body)
+      values = Oj.load(response.body)
+      errors values
     end
 
-    private_class_method :handle
+    def self.errors(values)
+      return values unless values['error']
+      violations = values['violationList'].map do |v|
+        Myra::Violation.from_hash v
+      end
+      raise APIActionError.new(violations)
+    end
+
+    private_class_method :handle, :errors
   end
 end

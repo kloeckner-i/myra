@@ -65,3 +65,6 @@ Style/MultilineMethodCallIndentation:
 # SupportedStyles: space, no_space
 Style/SpaceInsideBlockBraces:
   Enabled: false
+
+Style/RaiseArgs:
+  EnforcedStyle: compact
