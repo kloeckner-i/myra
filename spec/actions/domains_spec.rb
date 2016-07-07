@@ -3,6 +3,12 @@ require 'spec_helper'
 
 describe Myra::Domains do
   let(:url) { 'https://api.myracloud.com/en/rapi/domains' }
+  let(:response) do
+    {
+      status: 200,
+      body: load_json('successful_domain_creation')
+    }
+  end
   describe '.list' do
     let(:response) do
       {
@@ -44,13 +50,6 @@ describe Myra::Domains do
       ).to_return response
     end
 
-    let(:response) do
-      {
-        status: 200,
-        body: load_json('successful_domain_creation')
-      }
-    end
-
     it 'creates a new domain successfully' do
       domain = Myra::Domain.new
       domain.name = 'example.com'
@@ -69,16 +68,17 @@ describe Myra::Domains do
       stub_request(:delete, url).with(
         headers: {
           'Date' => /.*/,
-          'Authorization' => /MYRA\s.*/
+          'Authorization' => /MYRA\s.*/,
+          'Content-Type' => 'application/json'
         },
         body: {
           'id' => 1,
-          'modified' => modified
+          'modified' => modified.to_s
         }
-      ).to_return(status: 200)
+      ).to_return(response)
     end
 
-    it 'deletes an existing domain' do
+    it 'deletes an existing domain', focus: true do
       domain = Myra::Domain.new(id: 1)
       domain.modified = modified
 

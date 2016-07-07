@@ -22,9 +22,9 @@ module Myra
       def perform_request
         conn.send(@request.type) do |req|
           req.headers['Content-Type'] = @request.content_type
-          req.headers['Date'] = @request.date
+          req.headers['Date'] = @request.date.to_s
           req.headers['Authorization'] = auth_header
-          req.body = @request.payload if [:post, :put].include?(@request.type)
+          req.body = @request.payload if @request.with_payload?
         end
       end
 

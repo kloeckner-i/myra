@@ -54,8 +54,12 @@ module Myra
     end
 
     def payload
-      return '' unless [:post, :put].include? type
+      return '' unless with_payload?
       @payload
+    end
+
+    def with_payload?
+      [:post, :put, :delete].include?(type)
     end
 
     private
