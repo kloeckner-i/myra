@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'oj'
+
 module Myra
   module Domains
     PATH = '/domains'
@@ -21,14 +22,21 @@ module Myra
     def self.delete(domain)
       request = Request.new(path: PATH, type: :delete)
       payload = domain.to_hash.select { |k, _| %w(id modified).include?(k) }
-
       request.payload = Oj.dump(payload)
       response = request.do
       value = Oj.load(response.body)
       Domain.from_hash(value['targetObject'].first)
     end
 
-    def self.update(_domain)
+    def self.update(domain)
+      request = Request.new path: PATH, type: :post
+      payload = domain.to_hash.select do |k, _|
+        %w(id modified autoUpdate).include? k
+      end
+      request.payload = Oj.dump(payload)
+      response = request.do
+      value = Oj.load(response.body)
+      Domain.from_hash(value['targetObject'].first)
     end
   end
 end

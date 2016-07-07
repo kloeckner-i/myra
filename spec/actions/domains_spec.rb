@@ -3,6 +3,15 @@ require 'spec_helper'
 
 describe Myra::Domains do
   let(:url) { 'https://api.myracloud.com/en/rapi/domains' }
+  let!(:authorized_headers) do
+    {
+      'Date' => /.*/,
+      'Authorization' => /MYRA\s.*/,
+      'Content-Type' => 'application/json'
+    }
+  end
+  let(:modified) { DateTime.parse '2013-12-09T11:30:00+0100' }
+
   let(:response) do
     {
       status: 200,
@@ -34,10 +43,7 @@ describe Myra::Domains do
   describe '.create' do
     let!(:request) do
       stub_request(:put, url).with(
-        headers: {
-          'Date' => /.*/,
-          'Authorization' => /MYRA\s.*/
-        },
+        headers: authorized_headers,
         body: {
           'name' => 'example.com',
           'autoUpdate' => false,
@@ -63,14 +69,9 @@ describe Myra::Domains do
   end
 
   describe '.delete' do
-    let(:modified) { DateTime.parse '2013-12-09T11:30:00+0100' }
     let!(:request) do
       stub_request(:delete, url).with(
-        headers: {
-          'Date' => /.*/,
-          'Authorization' => /MYRA\s.*/,
-          'Content-Type' => 'application/json'
-        },
+        headers: authorized_headers,
         body: {
           'id' => 1,
           'modified' => modified.to_s
@@ -81,10 +82,44 @@ describe Myra::Domains do
     it 'deletes an existing domain', focus: true do
       domain = Myra::Domain.new(id: 1)
       domain.modified = modified
+      deleted_domain = described_class.delete(domain)
+      expect(request).to have_been_made.once
 
-      described_class.delete(domain)
+      expect(deleted_domain).to be_a Myra::Domain
+    end
+  end
+
+  describe '.update' do
+    let(:response) do
+      { status: 200, body: load_json('successful_domain_update') }
+    end
+    let!(:request) do
+      stub_request(:post, url).with(
+        headers: authorized_headers,
+        body: {
+          'id' => 15,
+          'modified' => modified.to_s,
+          'autoUpdate' => true
+        }
+      ).to_return(response)
+    end
+    let(:domain) do
+      dom = Myra::Domain.new(id: 15)
+      dom.name = 'example.com'
+      dom.modified = modified
+      dom
+    end
+    it 'updates the autoUpdate flag for the domain (and only this flag)' do
+      domain.auto_update = true
+
+      # ignored
+      domain.name = 'foobar.com'
+      domain.owned = false
+      updated = described_class.update(domain)
 
       expect(request).to have_been_made.once
+      expect(updated).to be_a Myra::Domain
+      expect(updated.name).to eql('example.com')
     end
   end
 end
