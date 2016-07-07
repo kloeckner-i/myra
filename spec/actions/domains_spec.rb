@@ -41,6 +41,15 @@ describe Myra::Domains do
         expect(domains.first.name).to eql 'foobar.rocks'
       end
     end
+
+    describe 'unsucessfully called' do
+      let(:response) { forbidden_response }
+      it 'throws an error' do
+        expect do
+          described_class.list
+        end.to raise_error(Myra::APIAuthError)
+      end
+    end
   end
 
   describe '.create' do
