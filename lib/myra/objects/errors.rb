@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 module Myra
-  class ValueObjectUndefinedError < StandardError
+  class APIAuthError < StandardError
     def message
-      'Object does not respond to PATH and cannot be used as value object'
+      'Could not authenticate with the API, check your credentials'
     end
   end
 

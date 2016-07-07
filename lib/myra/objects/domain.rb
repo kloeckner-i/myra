@@ -3,7 +3,6 @@ require 'date'
 module Myra
   class Domain
     PATH = '/domains'
-    OBJECT_TYPE = 'DomainVO'
 
     attr_reader :id
     attr_accessor :modified, :created, :name, :auto_update, :maintenance,

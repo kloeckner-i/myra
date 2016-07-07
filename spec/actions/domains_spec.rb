@@ -3,6 +3,7 @@ require 'spec_helper'
 
 describe Myra::Domains do
   let(:url) { 'https://api.myracloud.com/en/rapi/domains' }
+  let(:forbidden_response) { { status: 403 } }
   let!(:authorized_headers) do
     {
       'Date' => /.*/,
@@ -18,25 +19,27 @@ describe Myra::Domains do
       body: load_json('successful_domain_creation')
     }
   end
-  describe '.list' do
-    let(:response) do
-      {
-        status: 200,
-        body: load_json('successful_domains_response')
-      }
-    end
 
+  describe '.list' do
     let!(:stub) do
       stub_request(:get, url).to_return(response)
     end
 
-    it 'retrieves domains as list of objects' do
-      domains = described_class.list
-      expect(stub).to have_been_made.once
-      expect(domains).to be_an Array
-      expect(domains).to all(be_a(Myra::Domain))
-      expect(domains.last.name).to eql 'nova.at'
-      expect(domains.first.name).to eql 'foobar.rocks'
+    describe 'successfully called' do
+      let(:response) do
+        {
+          status: 200,
+          body: load_json('successful_domains_response')
+        }
+      end
+      it 'retrieves domains as list of objects' do
+        domains = described_class.list
+        expect(stub).to have_been_made.once
+        expect(domains).to be_an Array
+        expect(domains).to all(be_a(Myra::Domain))
+        expect(domains.last.name).to eql 'nova.at'
+        expect(domains.first.name).to eql 'foobar.rocks'
+      end
     end
   end
 
@@ -56,15 +59,29 @@ describe Myra::Domains do
       ).to_return response
     end
 
-    it 'creates a new domain successfully' do
+    let(:domain) do
       domain = Myra::Domain.new
       domain.name = 'example.com'
       domain.auto_update = false
       domain.auto_dns = false
+      domain
+    end
 
-      domain = described_class.create(domain)
-      expect(request).to have_been_made.once
-      expect(domain.id).to eql 1
+    describe 'successfully called' do
+      it 'creates a new domain' do
+        created_domain = described_class.create(domain)
+        expect(request).to have_been_made.once
+        expect(created_domain.id).to eql 1
+      end
+    end
+
+    describe 'unsucessfully called' do
+      let(:response) { forbidden_response }
+      it 'throws an error' do
+        expect do
+          described_class.create(domain)
+        end.to raise_error(Myra::APIAuthError)
+      end
     end
   end
 
@@ -79,13 +96,28 @@ describe Myra::Domains do
       ).to_return(response)
     end
 
-    it 'deletes an existing domain', focus: true do
+    let(:domain) do
       domain = Myra::Domain.new(id: 1)
       domain.modified = modified
-      deleted_domain = described_class.delete(domain)
-      expect(request).to have_been_made.once
+      domain
+    end
 
-      expect(deleted_domain).to be_a Myra::Domain
+    describe 'successfully called' do
+      it 'deletes an existing domain', focus: true do
+        deleted_domain = described_class.delete(domain)
+        expect(request).to have_been_made.once
+
+        expect(deleted_domain).to be_a Myra::Domain
+      end
+    end
+
+    describe 'unsucessfully called' do
+      let(:response) { forbidden_response }
+      it 'throws an error' do
+        expect do
+          described_class.delete(domain)
+        end.to raise_error(Myra::APIAuthError)
+      end
     end
   end
 
@@ -93,6 +125,14 @@ describe Myra::Domains do
     let(:response) do
       { status: 200, body: load_json('successful_domain_update') }
     end
+
+    let(:domain) do
+      dom = Myra::Domain.new(id: 15)
+      dom.name = 'example.com'
+      dom.modified = modified
+      dom
+    end
+
     let!(:request) do
       stub_request(:post, url).with(
         headers: authorized_headers,
@@ -103,23 +143,32 @@ describe Myra::Domains do
         }
       ).to_return(response)
     end
-    let(:domain) do
-      dom = Myra::Domain.new(id: 15)
-      dom.name = 'example.com'
-      dom.modified = modified
-      dom
-    end
-    it 'updates the autoUpdate flag for the domain (and only this flag)' do
+
+    before(:each) do
       domain.auto_update = true
 
       # ignored
       domain.name = 'foobar.com'
       domain.owned = false
-      updated = described_class.update(domain)
+    end
 
-      expect(request).to have_been_made.once
-      expect(updated).to be_a Myra::Domain
-      expect(updated.name).to eql('example.com')
+    describe 'successfully called' do
+      it 'updates the autoUpdate flag for the domain (and only this flag)' do
+        updated = described_class.update(domain)
+
+        expect(request).to have_been_made.once
+        expect(updated).to be_a Myra::Domain
+        expect(updated.name).to eql('example.com')
+      end
+    end
+
+    describe 'unsucessfully called' do
+      let(:response) { forbidden_response }
+      it 'throws an error' do
+        expect do
+          described_class.update(domain)
+        end.to raise_error(Myra::APIAuthError)
+      end
     end
   end
 end

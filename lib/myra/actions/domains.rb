@@ -7,6 +7,7 @@ module Myra
 
     def self.list
       response = Request.new(path: PATH).do
+      raise APIAuthError if response.status == 403
       values = Oj.load(response.body)
       values['list'].map { |domain| Domain.from_hash(domain) }
     end
@@ -15,6 +16,7 @@ module Myra
       request = Request.new(path: PATH, type: :put)
       request.payload = Oj.dump(domain.to_hash)
       response = request.do
+      raise APIAuthError if response.status == 403
       value = Oj.load(response.body)
       Domain.from_hash(value['targetObject'].first)
     end
@@ -24,6 +26,7 @@ module Myra
       payload = domain.to_hash.select { |k, _| %w(id modified).include?(k) }
       request.payload = Oj.dump(payload)
       response = request.do
+      raise APIAuthError if response.status == 403
       value = Oj.load(response.body)
       Domain.from_hash(value['targetObject'].first)
     end
@@ -35,6 +38,7 @@ module Myra
       end
       request.payload = Oj.dump(payload)
       response = request.do
+      raise APIAuthError if response.status == 403
       value = Oj.load(response.body)
       Domain.from_hash(value['targetObject'].first)
     end
