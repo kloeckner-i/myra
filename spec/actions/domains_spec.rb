@@ -47,21 +47,7 @@ describe Myra::Domains do
     let(:response) do
       {
         status: 200,
-        body: %(
-          {
-            "error": false,
-            "violationList": [],
-            "targetObject": [{
-              "id": 1,
-              "modified": "2013-12-13T11:30:00+0100",
-              "created": "2013-12-13T11:30:00+0100",
-              "name": "example.com",
-              "autoUpdate": false,
-              "owned": true,
-              "maintenance": false
-            }]
-          }
-        ).strip
+        body: load_json('successful_domain_creation')
       }
     end
 
@@ -80,7 +66,7 @@ describe Myra::Domains do
   describe '.delete' do
     let(:modified) { DateTime.parse '2013-12-09T11:30:00+0100' }
     let!(:request) do
-      stub_request(:put, url).with(
+      stub_request(:delete, url).with(
         headers: {
           'Date' => /.*/,
           'Authorization' => /MYRA\s.*/
