@@ -7,7 +7,7 @@ require 'date'
 module Myra
   class Request
     attr_reader :date, :api_key, :api_secret, :path
-    attr_accessor :type
+    attr_accessor :type, :payload
 
     ALLOWED_TYPES = [
       :get,
@@ -53,14 +53,19 @@ module Myra
       "#{Myra::BASE_URL}#{Myra::PATH}#{path}"
     end
 
+    def payload
+      return '' unless with_payload?
+      @payload
+    end
+
+    def with_payload?
+      [:post, :put, :delete].include?(type)
+    end
+
     private
 
     def md5
       Digest::MD5.method(:hexdigest)
-    end
-
-    def payload
-      ''
     end
 
     def verb

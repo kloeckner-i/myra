@@ -1,0 +1,10 @@
+{
+  "error": true,
+  "violationList": [
+    {
+      "propertyPath": "domainName",
+      "message": "Please enter your website"
+    }
+  ],
+  "targetObject": []
+}
