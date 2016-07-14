@@ -1,6 +1,7 @@
 {
   "error": false,
-  "list": [
+  "violationList": [],
+  "targetObject": [
     {
       "id": 1,
       "name": "bar.foo.com",
