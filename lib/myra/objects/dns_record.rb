@@ -12,6 +12,7 @@ module Myra
     attr_reader :id
     attr_accessor :name, :value, :ttl, :type, :alternative_cname,
                   :active, :modified, :created
+    attr_writer :deleted
 
     alias active? active
 
@@ -30,6 +31,7 @@ module Myra
       @active = true
       @type = Type::A
       @ttl = 300
+      @deleted = false
     end
 
     def self.from_hash(hash)
@@ -46,6 +48,10 @@ module Myra
     def to_hash
       return new_record_hash if id.nil?
       record_hash
+    end
+
+    def deleted?
+      @deleted
     end
 
     private

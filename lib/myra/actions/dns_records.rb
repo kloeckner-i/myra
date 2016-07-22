@@ -16,10 +16,23 @@ module Myra
       DnsRecord.from_hash(value['targetObject'].first)
     end
 
-    def self.update(_record, _domain)
+    def self.update(domain, record)
+      record = normalize_domain_name(record, domain)
+      request = Request.new(path: path(domain), type: :post)
+      request.payload = Oj.dump(record.to_hash)
+      value = handle request
+      DnsRecord.from_hash(value['targetObject'].first)
     end
 
-    def self.delete(_record, _domain)
+    def self.delete(domain, record)
+      r = normalize_domain_name(record, domain)
+      request = Request.new(path: path(domain), type: :delete)
+      keys = %w(modified id)
+      request.payload = Oj.dump(r.to_hash.select { |k, _| keys.include? k })
+      value = handle request
+      deleted_record = DnsRecord.from_hash(value['targetObject'].first)
+      deleted_record.deleted = true
+      deleted_record
     end
 
     def self.path(domain)
@@ -42,6 +55,7 @@ module Myra
     end
 
     def self.normalize_domain_name(record, domain)
+      return record if record.name.nil?
       return record if record.name.include?(domain.name)
       record.name = "#{record.name}.#{domain.name}"
       record
