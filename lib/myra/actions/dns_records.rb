@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Myra
   module DnsRecords
+    extend RequestHandler
+    extend DomainHandler
     PATH = '/dnsRecords/{domain}'
 
     def self.list(domain)
@@ -34,33 +36,5 @@ module Myra
       deleted_record.deleted = true
       deleted_record
     end
-
-    def self.path(domain)
-      PATH.gsub('{domain}', domain.name)
-    end
-
-    def self.handle(request)
-      response = request.do
-      raise APIAuthError if response.status == 403
-      values = Oj.load(response.body)
-      errors values
-    end
-
-    def self.errors(values)
-      return values unless values['error']
-      violations = values['violationList'].map do |v|
-        Myra::Violation.from_hash v
-      end
-      raise APIActionError.new(violations)
-    end
-
-    def self.normalize_domain_name(record, domain)
-      return record if record.name.nil?
-      return record if record.name.include?(domain.name)
-      record.name = "#{record.name}.#{domain.name}"
-      record
-    end
-
-    private_class_method :handle, :errors, :path, :normalize_domain_name
   end
 end

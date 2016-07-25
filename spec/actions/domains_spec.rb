@@ -221,7 +221,7 @@ describe Myra::Domains do
         end.to raise_error(Myra::APIAuthError)
       end
 
-      describe 'with violations' do
+      describe 'with violations', focus: true do
         let(:response) { erroneous_response }
 
         it 'throws an error with the violations parsed' do

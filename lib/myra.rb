@@ -3,6 +3,10 @@ require 'myra/version'
 require 'myra/configuration'
 require 'myra/request'
 
+# shared actions
+require 'myra/actions/shared/request_handler'
+require 'myra/actions/shared/domain_handler'
+
 # actions which can be performed
 require 'myra/actions/domains'
 require 'myra/actions/dns_records'
