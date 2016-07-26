@@ -135,7 +135,7 @@ describe Myra::Domains do
     end
 
     describe 'successfully called' do
-      it 'deletes an existing domain', focus: true do
+      it 'deletes an existing domain' do
         deleted_domain = described_class.delete(domain)
         expect(request).to have_been_made.once
 
@@ -221,7 +221,7 @@ describe Myra::Domains do
         end.to raise_error(Myra::APIAuthError)
       end
 
-      describe 'with violations', focus: true do
+      describe 'with violations' do
         let(:response) { erroneous_response }
 
         it 'throws an error with the violations parsed' do
