@@ -135,7 +135,7 @@ describe Myra::Domains do
     end
 
     describe 'successfully called' do
-      it 'deletes an existing domain', focus: true do
+      it 'deletes an existing domain' do
         deleted_domain = described_class.delete(domain)
         expect(request).to have_been_made.once
 

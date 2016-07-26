@@ -1,0 +1,18 @@
+{
+  "error": false,
+  "list": [
+    {
+      "id": 1,
+      "name": "bar.foo.com",
+      "value": "127.0.0.1",
+      "ttl": 300,
+      "recordType": "A",
+      "active": true,
+      "modified": "2013-12-23T11:30:00+0100",
+      "created": "2013-12-23T11:30:00+0100"
+    }
+  ],
+  "page": 1,
+  "count": 1,
+  "pageSize": 50
+}

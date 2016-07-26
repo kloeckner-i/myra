@@ -3,6 +3,7 @@ require 'oj'
 
 module Myra
   module Domains
+    extend RequestHandler
     PATH = '/domains'
 
     def self.list
@@ -34,22 +35,5 @@ module Myra
       value = handle request
       Domain.from_hash(value['targetObject'].first)
     end
-
-    def self.handle(request)
-      response = request.do
-      raise APIAuthError if response.status == 403
-      values = Oj.load(response.body)
-      errors values
-    end
-
-    def self.errors(values)
-      return values unless values['error']
-      violations = values['violationList'].map do |v|
-        Myra::Violation.from_hash v
-      end
-      raise APIActionError.new(violations)
-    end
-
-    private_class_method :handle, :errors
   end
 end
