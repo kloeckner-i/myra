@@ -65,7 +65,7 @@ describe Myra::Domains do
         stub_request(:get, url).to_return(response)
       end
       it 'can use the page parameter' do
-        domains = described_class.list(42)
+        described_class.list(42)
         expect(stub).to have_been_made.once
       end
     end

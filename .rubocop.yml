@@ -5,6 +5,7 @@ AllCops:
     - 'Gemfile*'
     - 'gems/**/*'
     - 'test.rb'
+    - 'vendor/**/*'
 
 # Offense count: 2
 # Cop supports --auto-correct.
