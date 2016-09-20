@@ -23,7 +23,9 @@ describe Myra::DnsRecords do
   end
   let(:request_body) { '' }
   describe '.list' do
+    let(:url) { 'https://api.myracloud.com/en/rapi/dnsRecords/foo.com/1' }
     let(:method) { :get }
+
     let(:response) do
       {
         status: 200,

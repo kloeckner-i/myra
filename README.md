@@ -52,6 +52,9 @@ list = Myra::Domains.list
 domain[0].name
 # => 'my-awesome-name.com'
 ```
+
+`list` takes one parameter which determines the `page` to be shown.
+
 #### Create
 
 ```ruby
@@ -98,6 +101,9 @@ domain = Myra::Domain.new id: 1
 records = Myra::DnsRecords.list(domain)
 # => [Myra::DnsRecord, Myra::DnsRecord, ...]
 ```
+
+
+`list` takes one additional parameter which determines the `page` to be shown.
 
 #### Create
 

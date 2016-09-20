@@ -6,8 +6,8 @@ module Myra
     extend RequestHandler
     PATH = '/domains'
 
-    def self.list
-      values = handle Request.new(path: PATH)
+    def self.list(page = 1)
+      values = handle Request.new(path: "#{PATH}/#{page}")
       values['list'].map { |domain| Domain.from_hash(domain) }
     end
 
