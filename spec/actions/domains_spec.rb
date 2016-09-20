@@ -22,6 +22,7 @@ describe Myra::Domains do
   end
 
   describe '.list' do
+    let(:url) { 'https://api.myracloud.com/en/rapi/domains/1' }
     let!(:stub) do
       stub_request(:get, url).to_return(response)
     end
@@ -49,6 +50,23 @@ describe Myra::Domains do
         expect do
           described_class.list
         end.to raise_error(Myra::APIAuthError)
+      end
+    end
+
+    describe 'page parameter' do
+      let(:response) do
+        {
+          status: 200,
+          body: load_json('successful_domains_response')
+        }
+      end
+      let(:url) { 'https://api.myracloud.com/en/rapi/domains/42' }
+      let!(:stub) do
+        stub_request(:get, url).to_return(response)
+      end
+      it 'can use the page parameter' do
+        domains = described_class.list(42)
+        expect(stub).to have_been_made.once
       end
     end
   end

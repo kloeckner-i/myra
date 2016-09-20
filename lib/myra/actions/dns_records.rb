@@ -5,8 +5,8 @@ module Myra
     extend DomainHandler
     PATH = '/dnsRecords/{domain}'
 
-    def self.list(domain)
-      values = handle Request.new(path: path(domain))
+    def self.list(domain, page = 1)
+      values = handle Request.new(path: "#{path(domain)}/#{page}")
       values['list'].map { |record| DnsRecord.from_hash(record) }
     end
 
